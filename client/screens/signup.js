@@ -2,6 +2,8 @@ import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-nat
 import React, { useState } from 'react'
 import {User,Lock} from "react-native-feather";
 import {useNavigation} from "@react-navigation/native"
+import axios from 'axios';
+
 
 export default function Signup() {
   const navigation=useNavigation();
@@ -9,19 +11,37 @@ export default function Signup() {
 
   function handleSubmit()
   {
-       if(userdata.username &&  userdata.password.length && userdata.confirm_password)
+       if(userdata.username &&  userdata.password && userdata.confirm_password)
        {
 
           if(userdata.password!=userdata.confirm_password)
           {
               setUserData("");
-              return alert("PLease check you password");
+              return alert("password doesn't match ");
               
           }
 
            else
            {
-               console.log(userdata);
+           
+            try{
+                axios({
+                  method:'POST',
+                  url:"http://10.0.2.2:5000/signup" ,
+                  data:{
+                    username:userdata.username,
+                    password:userdata.password,
+                    confirm_password:userdata.confirm_password,
+                  }
+                })
+              }
+              catch(err)
+              {
+                console.log(err)
+              }
+
+              navigation.navigate("home");
+                
            }
           
          
